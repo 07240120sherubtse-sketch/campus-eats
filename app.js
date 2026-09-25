@@ -15,16 +15,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.urlencoded({ extended: true }));
 
+app.use(express.json());
+
 // Routes
 const indexRoutes = require('./routes/index');
 app.use('/', indexRoutes);
-
-app.listen(PORT, () => {
-  console.log(`Campus Eats running at http://localhost:${PORT}`);
-});
 
 const db = require('./config/db');
 app.get('/db-test', async (req, res) => {
  const result = await db.one('SELECT NOW() AS current_time');
  res.json(result);
+});
+
+
+const apiRoutes = require('./routes/api');
+app.use('/api', apiRoutes);
+
+app.listen(PORT, () => {
+  console.log(`Campus Eats running at http://localhost:${PORT}`);
 });

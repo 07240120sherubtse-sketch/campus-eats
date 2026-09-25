@@ -29,4 +29,3 @@ exports.cancelOrder = async (req, res) => {
  res.redirect('/');
 };
 
-router.post('/orders/:id/cancel', orderController.cancelOrder);
