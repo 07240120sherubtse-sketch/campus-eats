@@ -2,31 +2,51 @@
 # campus-eats
 campus-eats/
 ├── config/
-│ └── db.js
+│   ├── db.js
+│   └── mailer.js               (new — sendVerificationEmail, sendPasswordResetEmail via Gmail)
 ├── controllers/
-│ ├── homeController.js (Controller — restaurants + stats + popular items)
-│ ├── aboutController.js
-│ ├── menuController.js
-│ └── orderController.js (Controller — full CRUD: create, read, update, cancel)
+│   ├── homeController.js
+│   ├── aboutController.js
+│   ├── menuController.js
+│   ├── orderController.js
+│   ├── apiController.js
+│   ├── authController.js       (new — signup, login, logout, verifyEmail,
+│   │                             forgot/reset password)
+│   ├── adminController.js      (new — restaurant admin dashboard)
+│   └── superAdminController.js (new — restaurants + granting admin access)
+├── middleware/
+│   └── auth.js                 (new — requireAuth, requireAdmin, requireSuperAdmin,
+│                                 requireAuthApi)
 ├── models/
-│ ├── Restaurant.js
-│ ├── MenuItem.js
-│ └── Order.js (Model / entity class — CRUD + aggregation queries + a transaction)
+│   ├── Restaurant.js           (getAllRestaurants and getRestaurantById now filter
+│   │                            is_active; adds getAllRestaurantsForAdmin,
+│   │                            createRestaurantBySuperAdmin, deactivateRestaurant,
+│   │                            getRestaurantByOwnerId)
+│   ├── MenuItem.js             (adds createMenuItem)
+│   ├── Order.js                (createOrder now takes and stores customerId)
+│   └── User.js                 (new — createUser, findByEmail, verifyPassword,
+│                                 markVerified, promoteToAdmin, setResetToken,
+│                                 findByResetToken, resetPassword)
 ├── routes/
-│ └── index.js (Routing — /, /about, /restaurants/:id/menu, POST /orders,
-│ GET /orders/:id, POST /orders/:id/update, POST /orders/:id/cancel)
+│   ├── index.js                (adds /signup, /login, /logout, /verify/:token,
+│   │                             /forgot-password, /reset-password/:token,
+│   │                             /admin/dashboard, /admin/menu, /superadmin/*;
+│   │                             POST /orders now behind requireAuth)
+│   └── api.js                  (POST /api/orders now behind requireAuthApi)
 ├── views/
-│ ├── partials/
-│ ├── index.ejs (View — restaurants + stats bar + popular items)
-│ ├── about.ejs
-│ ├── menu.ejs (View — order form now sends itemId)
-│ └── order_confirmation.ejs (View — real order, with update and cancel forms)
-├── public/
-├── app.js
-├── .env
-├── .gitignore
-├── nodemon.json
-└── package.json
+│   ├── partials/
+│   │   └── header.ejs          (nav now reflects all three roles)
+│   ├── signup.ejs              (new — customer accounts only)
+│   ├── signup-success.ejs      (new)
+│   ├── login.ejs               (new — one shared login page, adds forgot-password link)
+│   ├── verify-success.ejs      (new)
+│   ├── forgot-password.ejs     (new)
+│   ├── reset-password.ejs      (new)
+│   ├── admin-dashboard.ejs     (new)
+│   └── superadmin-dashboard.ejs (new)
+├── app.js                      (adds express-session, res.locals.user)
+└── .env                        (adds SESSION_SECRET, GMAIL_USER, GMAIL_APP_PASSWORD)
+
 
 ```
 
